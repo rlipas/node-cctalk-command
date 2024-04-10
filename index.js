@@ -95,11 +95,8 @@ class ccTalkMessage {
     UArray[1] = this._data.length;
     UArray[2] = this._command;
     UArray.set(this._data, 3);
-    var CRCArray = require('crc').crc16xmodem(Buffer.from(UArray))
-        .toString(16)
-        .match(/.{1,2}/g)
-        .map((val)=> parseInt(val, 16))
-        .reverse();
+    var CRC = require('crc').crc16xmodem(Buffer.from(UArray))
+    var CRCArray = [CRC & 0xFF, (CRC >> 8) & 0xFF];
     // console.log(CRCArray)
     // Set Checksum first Part at src
     this._buffer.set([CRCArray[0]],2);
@@ -115,11 +112,8 @@ class ccTalkMessage {
         UArray[1] = this._data.length;
         UArray[2] = this._command;
         UArray.set(this._data, 3);
-    var CRCArray = require('crc').crc16xmodem(Buffer.from(UArray))
-        .toString(16)
-        .match(/.{1,2}/g)
-        .map((val)=> parseInt(val, 16))
-        .reverse();
+    var CRC = require('crc').crc16xmodem(Buffer.from(UArray))
+    var CRCArray = [CRC & 0xFF, (CRC >> 8) & 0xFF];
 
     if ((this._buffer[2] == CRCArray[0]) && (this._buffer[this._buffer[1]+4] == CRCArray[1])) {
       return true;
